@@ -1,30 +1,27 @@
 use atty::Stream;
 use clipboard::ClipboardContext;
 use clipboard::ClipboardProvider;
+use std::error::Error;
 use std::fs;
 use std::io::{self, Read};
 use std::process;
 
-fn print_clip() {
-    let mut ctx: ClipboardContext =
-        ClipboardProvider::new().expect("could not access the clipboard");
+fn print_clip() -> Result<(), Box<dyn Error>> {
+    let mut ctx: ClipboardContext = ClipboardProvider::new()?;
     print!(
         "{}",
         ctx.get_contents().expect("could not access the clipboard")
     );
+    Ok(())
 }
 
-fn set_clip(s: &str) {
-    let mut ctx: ClipboardContext =
-        ClipboardProvider::new().expect("could not access the clipboard");
-    ctx.set_contents(s.to_owned()).unwrap_or_else(|e| {
-        eprintln!("error writing to clipboard: {:?}", e);
-        process::exit(1);
-    });
+fn set_clip(s: &str) -> Result<(), Box<dyn Error>> {
+    let mut ctx: ClipboardContext = ClipboardProvider::new()?;
+    ctx.set_contents(s.to_owned())
 }
 
 fn show_help() {
-    println!(
+    eprintln!(
         "rs-clip, manage the system clipboard
 copy:
 	pipe the output of a command to rs-clip
@@ -47,12 +44,18 @@ fn main() {
         handle
             .read_to_string(&mut buffer)
             .expect("failed to read the stdin");
-        set_clip(&buffer[..]);
+        set_clip(&buffer[..]).unwrap_or_else(|e| {
+            eprintln!("error writing to clipboard: {:?}", e);
+            process::exit(1);
+        });
         return;
     }
     let args: Vec<_> = std::env::args().collect();
     if args.len() <= 1 {
-        print_clip();
+        print_clip().unwrap_or_else(|e| {
+            eprintln!("error accessing the clipboard: {:?}", e);
+            process::exit(1);
+        });
         return;
     }
     // parse args
@@ -66,6 +69,11 @@ fn main() {
             eprintln!("error opening file {}:\n{:?}", &arg, &e);
             process::exit(1);
         }
-        Ok(s) => set_clip(&s[..]),
+        Ok(s) => {
+            set_clip(&s[..]).unwrap_or_else(|e| {
+                eprintln!("error writing to clipboard: {:?}", e);
+                process::exit(1);
+            });
+        }
     };
 }
