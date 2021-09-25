@@ -7,10 +7,18 @@ use clap::{
 
 pub fn new() -> App<'static> {
 	let app = App::new("clipper")
-	.version(crate_version!())
-	.about("Manage the system clipboard.")
-	.long_about("Manage the system clipboard.\nCall bare to print the contents of the clipboard instead.")
-	.setting(AppSettings::UnifiedHelpMessage);
+		.version(crate_version!())
+		.about("Manage the system clipboard.")
+		.after_help(
+			"\
+If there is no input (either from a file or from stdin)
+or if the stdout is piped,
+the contents of the clipboard will be written to stdout.
+
+This command only supports UTF-8 pipes.\
+",
+		)
+		.setting(AppSettings::UnifiedHelpMessage);
 
 	let clear = Arg::new("clear")
 		.short('x')
