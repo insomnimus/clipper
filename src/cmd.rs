@@ -4,6 +4,7 @@ use std::{
 	io::{
 		self,
 		Read,
+		Write,
 	},
 	path::PathBuf,
 };
@@ -85,7 +86,11 @@ This command only supports UTF-8 pipes.\
 
 fn print_clip() -> Result<(), Box<dyn Error>> {
 	let mut ctx: ClipboardContext = ClipboardProvider::new()?;
-	print!("{}", ctx.get_contents()?);
+	let data = ctx.get_contents()?;
+	let stdout = io::stdout();
+	let mut stdout = stdout.lock();
+	stdout.write_all(data.as_bytes())?;
+	stdout.flush()?;
 	Ok(())
 }
 
