@@ -1,12 +1,12 @@
 use clap::{
 	crate_version,
 	App,
-	AppSettings,
 	Arg,
+	arg,
 };
 
 pub fn new() -> App<'static> {
-	let app = App::new("clipper")
+	App::new("clipper")
 		.version(crate_version!())
 		.about("Manage the system clipboard.")
 		.after_help(
@@ -18,15 +18,9 @@ the contents of the clipboard will be written to stdout.
 This command only supports UTF-8 pipes.\
 ",
 		)
-		.setting(AppSettings::UnifiedHelpMessage);
-
-	let clear = Arg::new("clear")
-		.short('x')
-		.long("clear")
-		.about("Clear the contents of the clipboard.")
-		.conflicts_with("file");
-
-	let file = Arg::new("file").about("Copy the contents of a file to the clipboard.");
-
-	app.arg(clear).arg(file)
+		.args(&[
+		arg!(-n --noprint "Do not print the clipboard even if stdout is piped."),
+		arg!(clear: -x --clear "Clear the clipboard.").conflicts_with("file"),
+		Arg::new("file").help("Copy the contents of a file to the clipboard."),
+		])
 }

@@ -1,9 +1,9 @@
+mod cmd;
+
 use std::process;
 
-use clipper::cmd::Cmd;
-
 fn main() {
-	if let Err(e) = Cmd::from_args().run() {
+	if let Err(e) = cmd::Cmd::from_args().run() {
 		eprintln!("error: {}", e);
 		process::exit(2);
 	}
