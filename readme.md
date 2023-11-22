@@ -1,39 +1,29 @@
-# clipper
+# Clipper
+Clipper is a simple command line tool for managing the Windows clipboard.
 
-A simple but hugely flexible command for accessing the system clipboard.
-
-# Usage
-
-```sh
-# Print the contents of the clipboard.
+## Usage
+```powershell
+# Print the clipboard
 clipper
-
-# Copy the output of grep.
-grep 'Name:\s[a-zA-z]+\s[a-zA-Z]+' names.txt | clipper
-
-# Paste the contents of the clipboard into out.txt.
-clipper > out.txt
-
-# Assuming the clipboard already contains some json, format it using jq and copy it back.
-clipper | jq . | clipper
-
-# Execute a curl command, copying the output while displaying it.
-curl https://google.com | clipper | cat
-
-# Copy the contents of file.txt.
-clipper file.txt
-
-# Find the line containing the word "bazinga" in your clipboard
-# copy it, then pass it to cat for display.
-clipper | grep bazinga | clipper | cat
-
-# Clear the clipboard.
+# Set the clipboard to "asdf"
+echo asdf | clipper
+# Copy the contents of a file into the clipboard
+clipper readme.md
+# Paste the clipboard into a file
+clipper -o out.txt
+# Copy files and folders like the Windows file explorer (lazy)
+clipper -e foo.txt images
+# Print which files are in the clipboard, if any
+clipper -l
+# Paste the copied files inside D:/some_directory
+clipper -o D:/some_directory
+# Clear the clipboard
 clipper -x
 ```
 
-# Installation
-
-
-```sh
-cargo install --locked --git https://github.com/insomnimus/clipper --branch main
+## Building The Program
+```powershell
+cargo build --release
+# The executable will be in target/release/clipper.exe
 ```
+
