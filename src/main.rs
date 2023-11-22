@@ -32,11 +32,11 @@ use normpath::BasePathBuf;
 #[command(version)]
 pub struct Cmd {
 	/// Clear the clipboard
-	#[arg(short, long, short_alias = 'x', exclusive = true)]
+	#[arg(short = 'x', long, short_alias = 'c', exclusive = true)]
 	clear: bool,
 
 	/// Paste the contents of the clipboard to a file (use - for stdout)
-	#[arg(short, long, short_alias = 'o', group = "action")]
+	#[arg(short, long, short_alias = 'o', alias = "out", group = "action")]
 	paste: bool,
 
 	/// Copy files or folders to the clipboard like a file explorer would on
