@@ -29,7 +29,10 @@ use normpath::BasePathBuf;
 
 /// Manage the Windows clipboard
 #[derive(Parser)]
-#[command(version)]
+#[command(
+	version,
+	after_help = "If no path is specified and no option is set, prints the clipboard if not piped to; if piped to, reads stdin and sets the clipboard"
+)]
 pub struct Cmd {
 	/// Clear the clipboard
 	#[arg(short = 'x', long, short_alias = 'c', exclusive = true)]
