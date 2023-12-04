@@ -4,6 +4,7 @@ use std::{
 	io::{
 		self,
 		ErrorKind,
+		IsTerminal,
 		Read,
 	},
 	path::Path,
@@ -16,7 +17,6 @@ use anyhow::{
 	ensure,
 	Result,
 };
-use atty::Stream;
 use clap::Parser;
 use clipboard_win::{
 	formats,
@@ -70,7 +70,7 @@ impl Cmd {
 			}
 			Ok(())
 		} else if self.path.is_empty() {
-			if !atty::is(Stream::Stdin) {
+			if !io::stdin().is_terminal() {
 				copy_file_contents("-")
 			} else {
 				paste_single("-")
