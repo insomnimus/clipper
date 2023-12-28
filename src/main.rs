@@ -98,6 +98,8 @@ fn copy_file_contents(p: &str) -> Result<()> {
 		if data.ends_with("\r\n") {
 			data.pop();
 			data.pop();
+		} else if data.ends_with('\n') {
+			data.pop();
 		}
 		data
 	} else {
